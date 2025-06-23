@@ -13,9 +13,5 @@ __pycache__/
 *.swp
 *.tmp
 
-# Resultados de inferência (opcional — só se puder ser gerado novamente)
-resultados/*
-!resultados/.gitkeep
-
 # Sistema do VSCode
 .vscode/
