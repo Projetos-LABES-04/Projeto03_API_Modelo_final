@@ -14,7 +14,7 @@ class Transacao(BaseModel):
     conta_destino_id: str
     mesma_titularidade: bool
     transacao_data: str 
-    transacao_valor: floatD
+    transacao_valor: float
     transacao_tipo: str
 
 @app.get("/health")
