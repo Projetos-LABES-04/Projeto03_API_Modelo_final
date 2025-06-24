@@ -4,20 +4,27 @@ import joblib
 from tensorflow.keras.models import load_model
 import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CAMINHO_MODELOS = os.path.join(BASE_DIR, "..", "modelos")
+
 def carregar_modelos():
+    print("Carregando modelos...")
     modelos = {
-        "scaler": joblib.load("modelos/scaler.pkl"),
-        "colunas_scaler": joblib.load("modelos/colunas_scaler.pkl"),
-        "encoder_model": load_model("modelos/modelo_encoder.keras", compile=False),
-        "autoencoder": load_model("modelos/modelo_autoencoder.keras", compile=False),
-        "kmeans": joblib.load("modelos/kmeans_auto.pkl"),
-        "encoder_tipo": joblib.load("modelos/encoder_tipo_transacao.pkl"),
-        "encoder_semana": joblib.load("modelos/encoder_semana.pkl"),
-        "encoder_horario": joblib.load("modelos/encoder_horario.pkl")
+        "scaler": joblib.load(os.path.join(CAMINHO_MODELOS, "scaler.pkl")),
+        "colunas_scaler": joblib.load(os.path.join(CAMINHO_MODELOS, "colunas_scaler.pkl")),
+        "encoder_model": load_model(os.path.join(CAMINHO_MODELOS, "modelo_encoder.keras"), compile=False),
+        "autoencoder": load_model(os.path.join(CAMINHO_MODELOS, "modelo_autoencoder.keras"), compile=False),
+        "kmeans": joblib.load(os.path.join(CAMINHO_MODELOS, "kmeans_auto.pkl")),
+        "encoder_tipo": joblib.load(os.path.join(CAMINHO_MODELOS, "encoder_tipo_transacao.pkl")),
+        "encoder_semana": joblib.load(os.path.join(CAMINHO_MODELOS, "encoder_semana.pkl")),
+        "encoder_horario": joblib.load(os.path.join(CAMINHO_MODELOS, "encoder_horario.pkl")),
+        "modelo_xgb": joblib.load(os.path.join(CAMINHO_MODELOS, "modelo_xgb.pkl"))
     }
+    print("Modelos carregados com sucesso!")
     return modelos
 
 def preprocessar_transacoes(df: pd.DataFrame, modelos: dict) -> pd.DataFrame:
+    print("Iniciando pré-processamento das transações...")
     df['transacao_data'] = pd.to_datetime(df['transacao_data'])
 
     dias_semana = {0:'Segunda', 1:'Terca', 2:'Quarta', 3:'Quinta', 4:'Sexta', 5:'Sabado', 6:'Domingo'}
@@ -48,9 +55,11 @@ def preprocessar_transacoes(df: pd.DataFrame, modelos: dict) -> pd.DataFrame:
     dados_filtrados = df_proc[modelos['colunas_scaler']]
     df_proc[modelos['colunas_scaler']] = modelos['scaler'].transform(dados_filtrados)
 
+    print("Pré-processamento concluído.")
     return df_proc
 
 def detectar_anomalias(df_proc, modelos):
+    print("Detectando padrões de comportamento e anomalias...")
     reconstruido = modelos['autoencoder'].predict(df_proc[modelos['colunas_scaler']])
     erro_reconstrucao = np.mean(np.square(df_proc[modelos['colunas_scaler']] - reconstruido), axis=1)
 
@@ -81,6 +90,7 @@ def detectar_anomalias(df_proc, modelos):
             return "nenhuma"
 
     df_proc['suspeita_cluster'] = df_proc.apply(classificar_suspeita_cluster, axis=1)
+    print("Análise comportamental concluída.")
     return df_proc
 
 def gerar_perfil_cliente(df_conta):
@@ -104,4 +114,7 @@ def gerar_perfil_cliente(df_conta):
     return pd.Series(perfil)
 
 def gerar_perfis(df_final):
-    return df_final.groupby('conta_id', group_keys=False).apply(gerar_perfil_cliente).reset_index()
+    print("Gerando perfis médios por conta...")
+    resultado = df_final.groupby('conta_id', group_keys=False).apply(gerar_perfil_cliente).reset_index()
+    print("Perfis gerados com sucesso.")
+    return resultado 
