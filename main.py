@@ -21,22 +21,24 @@ class Transacao(BaseModel):
     transacao_valor: float
     transacao_tipo: str
 
+class RequisicaoInferencia(BaseModel):
+    transacoes: List[Transacao]
+
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
 
 @app.post("/inferencia")
-def inferencia_completa(transacoes: List[Transacao]):
+def inferencia_completa(payload: RequisicaoInferencia):
     try:
-        # Converte lista de objetos para DataFrame
         log("Recebendo transações")
-        df = pd.DataFrame([t.dict() for t in transacoes])
+        df = pd.DataFrame([t.dict() for t in payload.transacoes])
         log(f"DataFrame criado com shape: {df.shape}")
 
         # 1. Executa pipeline de comportamento
         log("Executando pipeline de comportamento")
         df_comportamento = rodar_pipeline_comportamento(df)
-    
+
         # 2. Executa pipeline de anomalia
         log("Executando pipeline de anomalia")
         df_final = rodar_pipeline_anomalia(df_comportamento)
@@ -50,7 +52,6 @@ def inferencia_completa(transacoes: List[Transacao]):
             'transacao_id', 'conta_id', 'decisao_final',
             'anomalia_confirmada', 'nivel_suspeita', 'motivo_alerta'
         ]].head(5).to_dict(orient='records')
-
 
         return {
             "total_transacoes": total,
