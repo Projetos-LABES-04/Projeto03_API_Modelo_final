@@ -2,9 +2,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import pandas as pd
 from typing import List
-from inferencia.comportamento import rodar_pipeline_comportamento
-from inferencia.anomalia import rodar_pipeline_anomalia
-
+from inferencia.inferencia_comportamento import rodar_pipeline_comportamento
+from inferencia.inferencia_anomalia import rodar_pipeline_anomalia
 app = FastAPI(title="API Comportamento e Anomalia")
 
 # Modelo de entrada com os dados diretamente na requisição
@@ -15,7 +14,7 @@ class Transacao(BaseModel):
     conta_destino_id: str
     mesma_titularidade: bool
     transacao_data: str 
-    transacao_valor: float
+    transacao_valor: floatD
     transacao_tipo: str
 
 @app.get("/health")
