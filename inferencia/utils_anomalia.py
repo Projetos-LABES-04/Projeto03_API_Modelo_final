@@ -6,13 +6,17 @@ from sklearn.metrics.pairwise import euclidean_distances
 import warnings
 import os
 
+# Este módulo inclui logs controlados via log(), para facilitar depuração sem poluir o terminal
+def log(msg):
+    print(f"[LOG] {msg}")
+
+
 warnings.filterwarnings("ignore", category=UserWarning, module='xgboost')
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CAMINHO_MODELOS = os.path.join(BASE_DIR, "..", "modelos")
 
 def carregar_modelos():
-    print("Carregando modelos...")
     modelos = {
         "scaler": joblib.load(os.path.join(CAMINHO_MODELOS, "scaler.pkl")),
         "colunas_scaler": joblib.load(os.path.join(CAMINHO_MODELOS, "colunas_scaler.pkl")),
@@ -24,11 +28,10 @@ def carregar_modelos():
         "encoder_horario": joblib.load(os.path.join(CAMINHO_MODELOS, "encoder_horario.pkl")),
         "modelo_xgb": joblib.load(os.path.join(CAMINHO_MODELOS, "modelo_xgb.pkl"))
     }
-    print("Modelos carregados com sucesso!")
+    log("Modelos carregados com sucesso!")
     return modelos
 
 def calcular_erros_e_distancias(df, modelos):
-    print("Calculando erro de reconstrução e distância de cluster...")
     colunas_scaler = modelos["colunas_scaler"]
     X_escalado = modelos["scaler"].transform(df[colunas_scaler])
     reconstruido = modelos["autoencoder"].predict(X_escalado)
@@ -37,7 +40,6 @@ def calcular_erros_e_distancias(df, modelos):
     cod_latente = modelos["encoder_model"].predict(X_escalado)
     dist = euclidean_distances(cod_latente, modelos["kmeans"].cluster_centers_)
     df["distancia_cluster"] = np.min(dist, axis=1)
-    print("Erros e distância calculados.")
     return df
 
 def gerar_motivo_alerta(row):
@@ -75,17 +77,15 @@ def gerar_score_continuo(df):
     return df
 
 def inferencia_anomalia(df, modelos):
-    print("Iniciando inferência de anomalia...")
     df['transacao_data'] = pd.to_datetime(df['transacao_data'], errors='coerce')
     df = df.sort_values(['conta_id', 'transacao_data'])
     df = calcular_erros_e_distancias(df, modelos)
 
-    print("Aplicando regras heurísticas...")
     df['tempo_desde_ultima'] = df.groupby('conta_id')['transacao_data'].diff().dt.total_seconds()
     df['regra_valor_alto'] = (df['transacao_valor'] > (df['media_valor'] + 3 * df['std_valor'])).astype(int)
     df['regra_horario'] = (df['faixa_horaria_Madrugada'] == 1).astype(int)
     df['regra_frequencia'] = (df['tempo_desde_ultima'] < 60).fillna(False).astype(int)
-    df['regra_cluster'] = df.get('suspeita_cluster', '').isin(['baixa', 'media', 'alta']).astype(int)
+    df['regra_cluster'] = df['suspeita_cluster'].isin(['baixa', 'media', 'alta']).astype(int)
 
     df['pontuacao_fraude'] = (
         2 * df['regra_cluster'] +
@@ -105,7 +105,6 @@ def inferencia_anomalia(df, modelos):
     negativos_idx = df[df['anomalia_confirmada'] == 0].sample(n=min(n_ruido, n_negativos), random_state=42).index
     df.loc[negativos_idx, 'anomalia_confirmada'] = 1
 
-    print("Aplicando modelo supervisionado...")
     colunas_validas = [
         'transacao_valor', 'fim_de_semana',
         'transacao_tipo_pix', 'transacao_tipo_transferencia',
@@ -141,5 +140,4 @@ def inferencia_anomalia(df, modelos):
     df['motivo_alerta'] = df.apply(gerar_motivo_alerta, axis=1)
     df = gerar_score_continuo(df)
 
-    print("Inferência concluída.")
     return df
