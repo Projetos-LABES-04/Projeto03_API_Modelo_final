@@ -131,24 +131,6 @@ Testados thresholds de 0.40 a 0.80:
 
 ---
 
----
-
-## 🚀 API de Inferência – FastAPI
-
-A solução foi encapsulada em uma **API REST com FastAPI** para análise via HTTP.
-
----
-
-### 📌 Endpoints Disponíveis
-
-#### `GET /health`
-
-Verifica se a API está ativa.
-
-```json
-{ "status": "ok" }
-```
-
 ## Estrutura do Código
 
 - `main.py`:  
