@@ -201,8 +201,9 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-##  requirements.txt
+## requirements.txt
 
+```txt
 pandas
 numpy
 tensorflow
