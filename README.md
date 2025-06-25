@@ -143,3 +143,29 @@ Verifica se a API está online.
 **Resposta:**
 ```json
 { "status": "ok" }
+```
+
+## API de Inferência (FastAPI)
+
+### Endpoint: `POST /inferencia`
+
+Recebe um lote de transações e retorna a inferência de comportamento e anomalia para cada uma.
+
+---
+
+### Exemplo de Requisição
+
+```json
+[
+  {
+    "transacao_id": "abc123",
+    "cliente_id": 1,
+    "conta_id": "conta001",
+    "conta_destino_id": "conta002",
+    "mesma_titularidade": true,
+    "transacao_data": "2025-06-25T14:30:00",
+    "transacao_valor": 150.75,
+    "transacao_tipo": "pix"
+  }
+]
+
