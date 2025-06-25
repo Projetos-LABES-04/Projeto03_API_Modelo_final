@@ -131,6 +131,16 @@ Testados thresholds de 0.40 a 0.80:
 
 ---
 
+## 🔗 API – Endpoints
+
+### `GET /health`  
+Verifica se a API está online.  
+Resposta: `{ "status": "ok" }`
+
+### `POST /inferencia`  
+Executa o pipeline completo (comportamento + anomalia) e retorna os resultados.
+
+---
 ## Estrutura do Código
 
 - `main.py`:  
@@ -142,15 +152,15 @@ Testados thresholds de 0.40 a 0.80:
   - `inferencia_anomalia.py`: aplica regras e o modelo XGBoost para classificar anomalias
 
 - `modelos/`: 
-- `colunas_scaler.pkl` — colunas utilizadas no scaler original  
-- `scaler.pkl` — instância do `RobustScaler` treinado  
-- `encoder_horario.pkl` — OneHotEncoder para faixas horárias  
-- `encoder_semana.pkl` — OneHotEncoder para dias da semana  
-- `encoder_tipo_transacao.pkl` — OneHotEncoder para tipo de transação
-- `kmeans_auto.pkl` — modelo KMeans treinado sobre os vetores do Autoencoder
-- `modelo_encoder.keras` — parte encoder da rede (reduz dimensionalidade)  
-- `modelo_autoencoder.keras` — autoencoder completo usado para reconstrução
-- `modelo_xgb.pkl` — modelo XGBoost final para inferência de anomalias
+  - `colunas_scaler.pkl` — colunas utilizadas no scaler original  
+  - `scaler.pkl` — instância do `RobustScaler` treinado  
+  - `encoder_horario.pkl` — OneHotEncoder para faixas horárias  
+  - `encoder_semana.pkl` — OneHotEncoder para dias da semana  
+  - `encoder_tipo_transacao.pkl` — OneHotEncoder para tipo de transação
+  - `kmeans_auto.pkl` — modelo KMeans treinado sobre os vetores do Autoencoder
+  - `modelo_encoder.keras` — parte encoder da rede (reduz dimensionalidade)  
+  - `modelo_autoencoder.keras` — autoencoder completo usado para reconstrução
+  - `modelo_xgb.pkl` — modelo XGBoost final para inferência de anomalias
 ---
 
 ## requirements.txt
