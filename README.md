@@ -194,10 +194,12 @@ Esta API recebe um lote de transações e retorna o resultado da análise de com
   ]
 }
 ```
-## Como executar a API
+## Como Executar a API
 
+```bash
 pip install -r requirements.txt
 uvicorn main:app --reload
+```
 
 ##  requirements.txt
 
@@ -212,6 +214,7 @@ xgboost
 matplotlib
 fastapi
 uvicorn
+
 
 
 
