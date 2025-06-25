@@ -168,4 +168,51 @@ Recebe um lote de transações e retorna a inferência de comportamento e anomal
     "transacao_tipo": "pix"
   }
 ]
+```
+
+# API de Inferência – FastAPI
+
+Esta API recebe um lote de transações e retorna o resultado da análise de comportamento + detecção de anomalias.
+
+---
+
+## Exemplo de Resposta
+
+```json
+{
+  "total_transacoes": 100,
+  "anomalias_detectadas": 5,
+  "amostra": [
+    {
+      "transacao_id": "abc123",
+      "conta_id": "conta001",
+      "decisao_final": 1,
+      "anomalia_confirmada": 1,
+      "nivel_suspeita": "alta",
+      "motivo_alerta": "erro alto, valor alto, cluster"
+    }
+  ]
+}
+```
+## Como executar a API
+
+pip install -r requirements.txt
+uvicorn main:app --reload
+
+##  requirements.txt
+
+pandas
+numpy
+tensorflow
+scikit-learn
+joblib
+statsmodels
+imbalanced-learn
+xgboost
+matplotlib
+fastapi
+uvicorn
+
+
+
 
