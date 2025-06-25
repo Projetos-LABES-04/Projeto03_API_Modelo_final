@@ -165,10 +165,27 @@ Verifica se a API está ativa.
   - KMeans (`.joblib`)
   - XGBoost (`.joblib`)
 
-- `requirements.txt`:  
-  Dependências do projeto, como:
-  - `fastapi`, `uvicorn`, `tensorflow`, `xgboost`, `scikit-learn`, `imbalanced-learn`, etc.
-
 ---
 
+## requirements.txt
 
+Lista de bibliotecas necessárias para execução do projeto:
+
+### FastAPI e Servidor
+- `fastapi==0.111.0`  
+- `uvicorn==0.30.0`
+
+### Machine Learning
+- `joblib==1.5.0`  
+- `scikit-learn==1.6.1`  
+- `xgboost==3.0.2`
+
+### Deep Learning
+- `tensorflow==2.19.0`
+
+### Manipulação de Dados
+- `pandas==2.2.3`  
+- `numpy==2.1.3`
+
+### Utilitários
+- `python-dateutil==2.9.0.post0`
