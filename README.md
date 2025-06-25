@@ -130,3 +130,45 @@ Testados thresholds de 0.40 a 0.80:
 - **Escolha final: threshold = 0.60** (melhor equilíbrio entre sensibilidade e robustez)
 
 ---
+
+---
+
+## 🚀 API de Inferência – FastAPI
+
+A solução foi encapsulada em uma **API REST com FastAPI** para análise via HTTP.
+
+---
+
+### 📌 Endpoints Disponíveis
+
+#### `GET /health`
+
+Verifica se a API está ativa.
+
+```json
+{ "status": "ok" }
+```
+
+## Estrutura do Código
+
+- `main.py`:  
+  Define os endpoints da API (`/health` e `/inferencia`) e orquestra o pipeline de inferência.
+
+- `inferencia/`:  
+  Diretório com os pipelines:
+  - `inferencia_comportamento.py`: aplica pré-processamento, codificação e clusterização (Autoencoder + KMeans)
+  - `inferencia_anomalia.py`: aplica regras e o modelo XGBoost para classificar anomalias
+
+- `modelos/`:  
+  Contém os modelos treinados salvos:
+  - Autoencoder (`.h5`)
+  - KMeans (`.joblib`)
+  - XGBoost (`.joblib`)
+
+- `requirements.txt`:  
+  Dependências do projeto, como:
+  - `fastapi`, `uvicorn`, `tensorflow`, `xgboost`, `scikit-learn`, `imbalanced-learn`, etc.
+
+---
+
+
