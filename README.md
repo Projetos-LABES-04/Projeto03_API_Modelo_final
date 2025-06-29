@@ -73,7 +73,7 @@ Para cada conta:
 
 ---
 
-### 1. Construção do Rótulo `fraude_confirmada`
+### 1. Construção do Rótulo `anomalia_confirmada`
 
 Criado com base em regras:
 
@@ -82,7 +82,7 @@ Criado com base em regras:
 - Frequência elevada
 - Desvio do cluster (erro ou distância)
 
-Transações com pontuação ≥ 3 receberam `fraude_confirmada = 1`.
+Transações com pontuação ≥ 3 receberam `anomalia_confirmada = 1`.
 
 > Ruído artificial de 0,5% foi adicionado para simular incertezas.
 
@@ -98,7 +98,7 @@ Erro de reconstrução e distância ao centróide dos clusters foram usados como
 
 - Modelo: XGBoost
 - Balanceamento: SMOTE
-- Alvo: `fraude_confirmada`
+- Alvo: `anomalia_confirmada`
 
 **Métricas**:
 
